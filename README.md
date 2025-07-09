@@ -1,10 +1,4 @@
-✅ Excellent idea! Let’s make a **professional, clear, team-friendly README.md** you can put in your repo.
-
-Below is a complete, polished template you can **copy and edit** as needed.
-
----
-
-## ✅ README.md
+# Atinka Meds
 
 ```markdown
 # Atinka Meds Pharmacy Inventory System
@@ -23,36 +17,7 @@ A Java console-based application to help manage a pharmacy’s inventory, suppli
 
 ---
 
-## 📂 Project Structure
 
-```
-
-Atinka-Meds/
-├── src/
-│   ├── models/
-│   │   ├── Drug.java
-│   │   ├── Supplier.java
-│   │   ├── Customer.java
-│   │   └── Transaction.java
-│   ├── managers/
-│   │   ├── DrugInventory.java
-│   │   ├── SupplierManager.java
-│   │   ├── CustomerManager.java
-│   │   └── TransactionManager.java
-│   ├── storage/
-│   │   └── FileHandler.java
-│   └── ui/
-│       └── Menu.java
-│   └── Main.java
-└── data/
-├── drugs.txt
-├── suppliers.txt
-├── customers.txt
-└── transactions.txt
-
-```
-
----
 
 ## ⚙️ How It Works
 
@@ -63,30 +28,8 @@ Atinka-Meds/
 
 ---
 
-## 📦 Data Folder
 
-Your `data/` folder must contain these CSV files:
 
-- `drugs.txt`
-- `suppliers.txt`
-- `customers.txt`
-- `transactions.txt`
-
-✅ Each file has a header line. Example:
-
-**drugs.txt**
-```
-
-code,name,suppliers,expiry\_date,price,stock
-
-```
-
-**transactions.txt**
-```
-
-transactionID,customerID,drugCode,quantity,totalPrice,date
-
-````
 
 ---
 
@@ -94,7 +37,7 @@ transactionID,customerID,drugCode,quantity,totalPrice,date
 
 ### 1️⃣ Clone the repo
 ```bash
-git clone https://github.com/yourusername/Atinka-Meds.git
+git clone https://github.com/gyampson/Atinka-Meds.git
 cd Atinka-Meds
 ````
 
@@ -156,36 +99,4 @@ yet to be named
 
 ---
 
-✅ You can **copy-paste** this into a file called:
 
-```
-
-README.md
-
-```
-
-✅ Place it in your project root:
-
-```
-
-Atinka-Meds/README.md
-
-```
-
----
-
-## ✅ How to Customize
-🟢 Add your team members’ real names under **Contributors**  
-🟢 Add your actual repo URL under **Clone the repo**  
-🟢 Add any special notes you want to share  
-
----
-
-## ✅ Ready to Help
-If you want:  
-✅ "Help me edit it for my repo"  
-✅ "Next" to continue coding  
-✅ "Pause" if you want to stop  
-
-Just tell me what you want next—I’m here to help you **finish your project** like a pro!
-```
