@@ -1,4 +1,4 @@
-transactionID,customerID,drugCode,quantity,totalPrice,date
+TransactionID,CustomerID,DrugCode,Quantity,TotalPrice,Date
 1020,0293,09828,9928,837.0,2024-19-21
 12990,2020,2020,1290,2020.0,2020-20-20
 1224,092882,1092,12,360.0,2025-12-23

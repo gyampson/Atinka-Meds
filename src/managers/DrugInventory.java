@@ -24,9 +24,9 @@ public class DrugInventory {
     }
 
     public void removeDrug(String code) {
-        drugs.removeIf(d -> d.getCode().equals(code));
-        System.out.println("Drug removed (if it existed).");
+        drugs.removeIf(d -> d.getCode().equalsIgnoreCase(code));
     }
+
 
     public void updateDrug(String code, double newPrice, int newStock) {
         for (Drug d : drugs) {

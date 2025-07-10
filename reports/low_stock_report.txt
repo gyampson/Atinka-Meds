@@ -1,3 +1,3 @@
-code,name,suppliers,expiry_date,price,stock
+Code,Name,Suppliers,ExpiryDate,Price,Stock
 1092,tramadol,11257581,2025-04-12,30.0,0
 225,red,11175301,2021-12-14,23.0,3

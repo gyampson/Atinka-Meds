@@ -11,6 +11,11 @@ public class CustomerManager {
         this.customers = new ArrayList<>();
     }
 
+    public void removeCustomer(String id) {
+        customers.removeIf(c -> c.getCustomerID().equalsIgnoreCase(id));
+    }
+
+
     public void addCustomer(Customer customer) {
         customers.add(customer);
         System.out.println(" Customer added successfully!.");
