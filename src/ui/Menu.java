@@ -2,8 +2,13 @@ package ui;
 
 import managers.DrugInventory;
 import managers.SupplierManager;
+import managers.TransactionManager;
+import models.Customer;
 import models.Drug;
 import models.Supplier;
+import managers.CustomerManager;
+import models.Transaction;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,13 +17,21 @@ import java.util.Scanner;
 public class Menu {
     private DrugInventory drugInventory;
     private SupplierManager supplierManager;
+    private CustomerManager customerManager;
+    private TransactionManager transactionManager;
     private Scanner scanner;
 
-    public Menu(DrugInventory drugInventory, SupplierManager supplierManager) {
+
+
+
+    public Menu(DrugInventory drugInventory, SupplierManager supplierManager, CustomerManager customerManager, TransactionManager transactionManager) {
         this.drugInventory = drugInventory;
         this.supplierManager = supplierManager;
+        this.customerManager = customerManager;
+        this.transactionManager = transactionManager;
         this.scanner = new Scanner(System.in);
     }
+
 
     public void show() {
         boolean exit = false;
@@ -29,7 +42,11 @@ public class Menu {
             System.out.println("3. List Drugs");
             System.out.println("4. Add Supplier");
             System.out.println("5. List Suppliers");
-            System.out.println("6. Exit");
+            System.out.println("6. Add Customer");
+            System.out.println("7. List Customers");
+            System.out.println("8. Record Transactions");
+            System.out.println("9. List Transactions");
+            System.out.println("10. Save & Exit");
             System.out.print("Choose option: ");
 
             int choice = scanner.nextInt();
@@ -52,9 +69,23 @@ public class Menu {
                     supplierManager.listSuppliers();
                     break;
                 case 6:
+                    addCustomer();
+                    break;
+                case 7:
+                    customerManager.listCustomers();
+                    break;
+                case 8:
+                    recordTransaction();
+                    break;
+                case 9:
+                    transactionManager.listTransactions();
+                    break;
+                case 10:
                     exit = true;
                     System.out.println("Exiting. Goodbye!");
                     break;
+
+
                 default:
                     System.out.println("Invalid choice. Try again.");
             }
@@ -116,4 +147,49 @@ public class Menu {
         Supplier supplier = new Supplier(id, name, contact, location, turnaround, drugsSupplied);
         supplierManager.addSupplier(supplier);
     }
+
+
+
+
+    private void addCustomer() {
+        System.out.print("Enter Customer ID: ");
+        String id = scanner.nextLine();
+
+        System.out.print("Enter Name: ");
+        String name = scanner.nextLine();
+
+        System.out.print("Enter Phone: ");
+        String phone = scanner.nextLine();
+
+        System.out.print("Enter Address: ");
+        String address = scanner.nextLine();
+
+        customerManager.addCustomer(new Customer(id, name, phone, address));
+    }
+//    private void listCustomers(){}
+
+
+    private void recordTransaction() {
+        System.out.print("Enter Transaction ID: ");
+        String txnID = scanner.nextLine();
+
+        System.out.print("Enter Customer ID: ");
+        String customerID = scanner.nextLine();
+
+        System.out.print("Enter Drug Code: ");
+        String drugCode = scanner.nextLine();
+
+        System.out.print("Enter Quantity: ");
+        int quantity = Integer.parseInt(scanner.nextLine());
+
+        System.out.print("Enter Total Price: ");
+        double totalPrice = Double.parseDouble(scanner.nextLine());
+
+        System.out.print("Enter Date (YYYY-MM-DD): ");
+        String date = scanner.nextLine();
+
+        Transaction transaction = new Transaction(txnID, customerID, drugCode, quantity, totalPrice, date);
+        transactionManager.addTransaction(transaction);
+    }
+
 }

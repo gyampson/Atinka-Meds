@@ -1,0 +1,2 @@
+code,name,suppliers,expiry_date,price,stock
+1092,tramadol,11257581,2025-04-12,30.0,12

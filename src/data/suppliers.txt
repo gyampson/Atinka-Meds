@@ -1,2 +1,0 @@
-supplierID,name,contact,location,turnaround,drugsSupplied
-SUP001,BestMeds,+23355545629,Accra,2.5,DRG001|DRG002

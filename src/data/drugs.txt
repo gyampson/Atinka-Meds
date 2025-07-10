@@ -1,2 +1,0 @@
-code,name,suppliers,expiry_date,price,stock
-DRG001,Paracetamol,SUP001|SUP002,2026-01-01,5.0,100

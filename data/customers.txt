@@ -1,0 +1,2 @@
+customerID,name,phone,address
+092882,Edward,0993773,Nima
