@@ -1,3 +1,5 @@
+package main;
+
 import managers.DrugInventory;
 import managers.SupplierManager;
 import managers.TransactionManager;
@@ -19,8 +21,7 @@ public class Main {
         String suppliersFile = "data/suppliers.txt";
         String customersFile = "data/customers.txt";
         String transactionsFile = "data/transactions.txt";
-        String transactionReportFile = "data/transactionReport.txt";
-        String lowStockReportFile = "data/lowStockReport.txt";
+
 
 
 

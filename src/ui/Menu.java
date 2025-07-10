@@ -63,7 +63,8 @@ public class Menu {
             System.out.println("17. Export Transactions Report");
             System.out.println("18. Export Low Stock Report");
             System.out.println("19. View Top-Selling Drugs");
-            System.out.println("20. Save & Exit");
+            System.out.println("20. View Customer Purchase History");
+            System.out.println("21. Save & Exit");
             System.out.print("Choose option: ");
 
             int choice = scanner.nextInt();
@@ -127,8 +128,11 @@ public class Menu {
                 case 19:
                     viewTopSellingDrugs();
                     break;
-
                 case 20:
+                    viewCustomerPurchaseHistory();
+                    break;
+
+                case 21:
                     exit = true;
                     System.out.println("Exiting. Goodbye!");
                     break;
@@ -493,6 +497,40 @@ public class Menu {
             String name = (drug != null) ? drug.getName() : "Unknown Drug";
 
             System.out.println(code + " | " + name + " | Quantity Sold: " + sold);
+        }
+
+        System.out.println("------------------------------------");
+    }
+    private void viewCustomerPurchaseHistory() {
+        System.out.print("Enter Customer ID to view history: ");
+        String customerID = scanner.nextLine();
+
+        Customer customer = customerManager.findByID(customerID);
+        if (customer == null) {
+            System.out.println("❌ Customer not found.");
+            return;
+        }
+
+        List<Transaction> transactions = transactionManager.getTransactions();
+
+        boolean found = false;
+        System.out.println("\n🧾 Purchase History for Customer: " + customerID);
+        System.out.println("------------------------------------");
+
+        for (Transaction t : transactions) {
+            if (t.getCustomerID().equalsIgnoreCase(customerID)) {
+                found = true;
+                System.out.println(
+                        t.getTransactionID() + " | " +
+                                t.getDrugCode() + " | Quantity: " +
+                                t.getQuantity() + " | Total: $" +
+                                t.getTotalPrice() + " | Date: " + t.getDate()
+                );
+            }
+        }
+
+        if (!found) {
+            System.out.println("❌ No transactions found for this customer.");
         }
 
         System.out.println("------------------------------------");
