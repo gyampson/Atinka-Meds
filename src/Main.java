@@ -1,4 +1,3 @@
-package main;
 
 import managers.DrugInventory;
 import managers.SupplierManager;

@@ -43,7 +43,10 @@ public class Menu {
     public void show() {
         boolean exit = false;
         while (!exit) {
-            System.out.println("\n=== Atinka Meds Pharmacy Inventory System ===");
+            System.out.println("╔══════════════════════════════════════════════╗");
+            System.out.println("║   💊 Atinka Meds Pharmacy Inventory System   💊  ║");
+            System.out.println("╚══════════════════════════════════════════════╝");
+
             System.out.println("1.  Add Drug");
             System.out.println("2.  Remove Drug");
             System.out.println("3.  List Drugs");
@@ -68,7 +71,21 @@ public class Menu {
             System.out.print("Choose option: ");
 
             int choice = scanner.nextInt();
-            scanner.nextLine(); // clear newline
+            scanner.nextLine();
+
+            System.out.println("╔══════════════════════════════════════════════╗");
+            System.out.println("║   📦 Atinka Meds Pharmacy Inventory System   ║");
+            System.out.println("╚══════════════════════════════════════════════╝");
+            String ANSI_RESET = "\u001B[0m";         // Resets all formattin
+            String ANSI_YELLOW = "\u001B[33m";       // Yellow text for reminder
+            String ANSI_BOLD = "\u001B[1m";          // Bold text
+
+            // Reminder line
+            String reminderLine = ANSI_BOLD + ANSI_YELLOW +
+                    " ⓘ Please remember to save and exit by choosing option 21." + ANSI_RESET;
+
+
+            System.out.println("\n" + reminderLine + "\n");
 
             switch (choice) {
                 case 1:
@@ -134,7 +151,7 @@ public class Menu {
 
                 case 21:
                     exit = true;
-                    System.out.println("Exiting. Goodbye!");
+                    System.out.println("Exiting ... Done!");
                     break;
 
 
