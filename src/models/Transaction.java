@@ -18,7 +18,7 @@ public class Transaction {
         this.date = date;
     }
 
-    public String getTransactionID() { return transactionID; }
+    public String getTxnID() { return transactionID; }
     public String getCustomerID() { return customerID; }
     public String getDrugCode() { return drugCode; }
     public int getQuantity() { return quantity; }
@@ -30,5 +30,7 @@ public class Transaction {
         return transactionID + " | " + customerID + " | " + drugCode + " | Qty: " + quantity
                 + " | Total: " + totalPrice + " | Date: " + date;
     }
+
+
 }
 

@@ -161,7 +161,7 @@ public class FileHandler {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
                 writer.write("transactionID,customerID,drugCode,quantity,totalPrice,date\n");
                 for (Transaction t : transactions) {
-                    writer.write(t.getTransactionID() + "," + t.getCustomerID() + "," +
+                    writer.write(t.getTxnID() + "," + t.getCustomerID() + "," +
                             t.getDrugCode() + "," + t.getQuantity() + "," +
                             t.getTotalPrice() + "," + t.getDate() + "\n");
                 }
