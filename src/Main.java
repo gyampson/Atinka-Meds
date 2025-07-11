@@ -23,6 +23,10 @@ public class Main {
 
 
 
+        String ANSI_RESET = "\u001B[0m";         // Resets all formatting
+        String ANSI_GREEN = "\u001B[32m";        // Green text for success
+        String ANSI_BOLD = "\u001B[1m";
+
 
 
         // Load lists from files
@@ -75,6 +79,10 @@ public class Main {
 
 
 
-        System.out.println("✅ All changes saved. Goodbye!");
+        System.out.println("\n"); // Add some space for separation
+        System.out.println(ANSI_BOLD + ANSI_GREEN + "╔═══════════════════════════════════════╗" + ANSI_RESET);
+        System.out.println(ANSI_BOLD + ANSI_GREEN + "║   ✅ All changes saved. Goodbye!      ║" + ANSI_RESET);
+        System.out.println(ANSI_BOLD + ANSI_GREEN + "╚═══════════════════════════════════════╝" + ANSI_RESET);
+        System.out.println("\n");
     }
 }

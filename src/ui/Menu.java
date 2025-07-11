@@ -151,12 +151,22 @@ public class Menu {
 
                 case 21:
                     exit = true;
-                    System.out.println("Exiting ... Done!");
+                    System.out.println("Saving and exiting ...  Done!"); // Indicate action
+                    // Optional: Add a small delay for user experience (requires try-catch for InterruptedException)
+                    try {
+                        Thread.sleep(500); // Wait for 0.5 seconds
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt(); // Restore the interrupted status
+                    }
+                    System.out.println("Thank you for using Atinka Meds. Goodbye!"); // Final confirmation
                     break;
 
 
                 default:
-                    System.out.println("Invalid choice. Try again.");
+                    String ANSI_RED = "\u001B[31m";          // Red text for errors
+
+                    System.out.println(ANSI_RED + "❌ Invalid choice. Please try again." + ANSI_RESET);
+                    break;
             }
         }
     }
