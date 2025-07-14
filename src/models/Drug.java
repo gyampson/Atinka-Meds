@@ -3,6 +3,17 @@ package models;
 import java.util.List;
 
 public class Drug {
+    // ANSI Color Constants
+    public static final String ANSI_RESET  = "\u001B[0m";
+    public static final String ANSI_BOLD   = "\u001B[1m";
+    public static final String ANSI_BLUE   = "\u001B[34m";
+    public static final String ANSI_CYAN   = "\u001B[36m";
+    public static final String ANSI_GREEN  = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+
+
+
+
     private String name;
     private String code;
     private List<String> suppliers;
@@ -65,8 +76,23 @@ public class Drug {
         this.stock = stock;
     }
 
+
     @Override
     public String toString() {
-        return code + " | " + name + " | " + price + " | Stock: " + stock + " | Expiry: " + expiryDate;
+        String suppliersStr = (suppliers != null && !suppliers.isEmpty())
+                ? String.join(", ", suppliers)
+                : "N/A";
+
+        return ANSI_CYAN + ANSI_BOLD + "\n--- Drug Details ---" + ANSI_RESET + "\n" +
+                ANSI_GREEN + "══════════════════════════════════════════════" + ANSI_RESET + "\n" +
+                ANSI_GREEN + "  Code:          " + ANSI_BOLD + code + ANSI_RESET + "\n" +
+                ANSI_GREEN + "  Name:          " + ANSI_BOLD + name + ANSI_RESET + "\n" +
+                ANSI_GREEN + "  Suppliers:     " + ANSI_BOLD + suppliersStr + ANSI_RESET + "\n" +
+                ANSI_GREEN + "  Expiry Date:   " + ANSI_BOLD + expiryDate + ANSI_RESET + "\n" +
+                ANSI_GREEN + String.format("  Price:         " + ANSI_BOLD + "GHS %.2f", price) + ANSI_RESET + "\n" +
+                ANSI_GREEN + "  Current Stock: " + ANSI_BOLD + stock + ANSI_RESET + "\n" +
+                ANSI_GREEN + "══════════════════════════════════════════════" + ANSI_RESET;
     }
+
+
 }

@@ -355,16 +355,7 @@ public class Menu {
         int totalTransactions = transactions.size();
         double totalSales = 0.0;
 
-        // Optional: Group by Date (more advanced, but good for reports)
-        // Map<LocalDate, Double> salesByDate = new TreeMap<>();
-        // for (Transaction t : transactions) {
-        //     try {
-        //         LocalDate date = LocalDate.parse(t.getDate()); // Assuming t.getDate() returns a String
-        //         salesByDate.put(date, salesByDate.getOrDefault(date, 0.0) + t.getTotalPrice());
-        //     } catch (java.time.format.DateTimeParseException e) {
-        //         // Handle invalid date format in Transaction if necessary
-        //     }
-        // }
+
 
         System.out.println(ANSI_BLUE + ANSI_BOLD + "--- Summary ---" + ANSI_RESET);
         System.out.println(ANSI_GREEN + "Total Transactions Recorded: " + ANSI_BOLD + totalTransactions + ANSI_RESET);
@@ -375,26 +366,23 @@ public class Menu {
         System.out.printf(ANSI_GREEN + "Total Revenue Generated:    GHS " + ANSI_BOLD + "%.2f\n" + ANSI_RESET, totalSales);
 
         System.out.println(ANSI_BLUE + ANSI_BOLD + "\n--- Individual Transactions ---" + ANSI_RESET);
-        // Display individual transactions with clean formatting
+
         System.out.println(String.format(ANSI_BOLD + "%-12s %-15s %-15s %-10s %-10s" + ANSI_RESET,
                 "TXN ID", "CUSTOMER ID", "DRUG CODE", "QTY", "PRICE"));
         System.out.println(ANSI_CYAN + "------------------------------------------------------------" + ANSI_RESET);
 
         for (Transaction t : transactions) {
-            // Assuming Transaction has getTxnID(), getCustomerID(), getDrugCode(), getQuantity(), getTotalPrice()
-            // Note: Your Transaction class likely holds a list of drug items if multiple drugs can be in one transaction.
-            // For simplicity, I'm assuming a single drug per transaction as per your `recordTransaction` method.
+
             System.out.println(String.format("%-12s %-15s %-15s %-10d GHS %-6.2f",
                     t.getTxnID(),
-                    t.getCustomerID(), // Assuming this gives customer ID string
-                    t.getDrugCode(),   // Assuming this gives drug code string
+                    t.getCustomerID(),
+                    t.getDrugCode(),
                     t.getQuantity(),
                     t.getTotalPrice()));
         }
         System.out.println(ANSI_CYAN + "------------------------------------------------------------" + ANSI_RESET);
 
 
-        // Optional: Add more summary sections if needed, e.g., Top Selling Drugs, Sales by Customer
 
         System.out.println(ANSI_CYAN + "═══════════════════════════════════════" + ANSI_RESET); // Bottom Separator
         System.out.println(ANSI_YELLOW + "Report generated at " + java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm")) + ANSI_RESET);
@@ -406,7 +394,7 @@ public class Menu {
         System.out.print(ANSI_BLUE + "Enter Drug Code to search: " + ANSI_RESET);
         String code = scanner.nextLine();
 
-        // Assuming drugInventory.findByCode(code) returns a Drug object or null
+
         Drug drug = drugInventory.findByCode(code);
 
         if (drug != null) {

@@ -3,6 +3,18 @@ package models;
 import java.util.List;
 
 public class Supplier {
+
+    // ANSI Color Constants
+    public static final String ANSI_RESET  = "\u001B[0m";
+    public static final String ANSI_BOLD   = "\u001B[1m";
+    public static final String ANSI_BLUE   = "\u001B[34m";
+    public static final String ANSI_CYAN   = "\u001B[36m";
+    public static final String ANSI_GREEN  = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+
+
+
+
     private String supplierID;
     private String name;
     private String contact;
@@ -39,6 +51,13 @@ public class Supplier {
 
     @Override
     public String toString() {
-        return supplierID + " | " + name + " | " + location + " | Turnaround: " + deliveryTurnaroundTime;
+        return ANSI_CYAN + ANSI_BOLD + "\n--- Supplier Details ---" + ANSI_RESET + "\n" +
+                ANSI_GREEN + "══════════════════════════════════════" + ANSI_RESET + "\n" +
+                ANSI_GREEN + "  Supplier ID : " + ANSI_BOLD + supplierID + ANSI_RESET + "\n" +
+                ANSI_GREEN + "  Name        : " + ANSI_BOLD + name + ANSI_RESET + "\n" +
+                ANSI_GREEN + "  Location    : " + ANSI_BOLD + location + ANSI_RESET + "\n" +
+                ANSI_GREEN + "  Turnaround  : " + ANSI_BOLD + deliveryTurnaroundTime + " days" + ANSI_RESET + "\n" +
+                ANSI_GREEN + "══════════════════════════════════════" + ANSI_RESET;
     }
+
 }

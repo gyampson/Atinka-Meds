@@ -41,17 +41,7 @@ public class DrugInventory {
     }
 
 
-    public void updateDrug(String code, double newPrice, int newStock) {
-        for (Drug d : drugs) {
-            if (d.getCode().equals(code)) {
-                d.setPrice(newPrice);
-                d.setStock(newStock);
-                System.out.println("Drug updated!");
-                return;
-            }
-        }
-        System.out.println("Drug not found.");
-    }
+
 
     public void listDrugs() {
         for (Drug d : drugs) {
@@ -68,15 +58,6 @@ public class DrugInventory {
         return null;
     }
 
-    public List<Drug> findByName(String name) {
-        List<Drug> results = new ArrayList<>();
-        for (Drug d : drugs) {
-            if (d.getName().toLowerCase().contains(name.toLowerCase())) {
-                results.add(d);
-            }
-        }
-        return results;
-    }
 
     public List<Drug> getAllDrugs() {
         return drugs;
