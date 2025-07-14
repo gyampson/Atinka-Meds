@@ -363,7 +363,7 @@ public class Menu {
         for (Transaction t : transactions) {
             totalSales += t.getTotalPrice();
         }
-        System.out.printf(ANSI_GREEN + "Total Revenue Generated:    GHS " + ANSI_BOLD + "%.2f\n" + ANSI_RESET, totalSales);
+        System.out.printf(ANSI_GREEN + "Total Revenue Generated:    GH₵ " + ANSI_BOLD + "%.2f\n" + ANSI_RESET, totalSales);
 
         System.out.println(ANSI_BLUE + ANSI_BOLD + "\n--- Individual Transactions ---" + ANSI_RESET);
 
@@ -373,7 +373,7 @@ public class Menu {
 
         for (Transaction t : transactions) {
 
-            System.out.println(String.format("%-12s %-15s %-15s %-10d GHS %-6.2f",
+            System.out.println(String.format("%-12s %-15s %-15s %-10d GH₵ %-6.2f",
                     t.getTxnID(),
                     t.getCustomerID(),
                     t.getDrugCode(),
@@ -405,7 +405,7 @@ public class Menu {
             // Assuming drug.getSuppliers() returns a List<String> or similar
             System.out.println(ANSI_GREEN + "  Suppliers:    " + ANSI_BOLD + String.join(", ", drug.getSuppliers()) + ANSI_RESET);
             System.out.println(ANSI_GREEN + "  Expiry Date:  " + ANSI_BOLD + drug.getExpiryDate() + ANSI_RESET);
-            System.out.println(ANSI_GREEN + String.format("  Price:        GHS %.2f", drug.getPrice()) + ANSI_RESET);
+            System.out.println(ANSI_GREEN + String.format("  Price:        GH₵ %.2f", drug.getPrice()) + ANSI_RESET);
             System.out.println(ANSI_GREEN + "  Stock:        " + ANSI_BOLD + drug.getStock() + ANSI_RESET);
             System.out.println(ANSI_GREEN + "═════════════════════════════════════" + ANSI_RESET); // Bottom Separator
         } else {
@@ -758,13 +758,13 @@ public class Menu {
         } else {
             // Print a formatted table header
             System.out.println(String.format(ANSI_BLUE + ANSI_BOLD + "%-12s | %-15s | %-10s | %-12s | %s" + ANSI_RESET,
-                    "TXN ID", "DRUG CODE", "QTY", "TOTAL (GHS)", "DATE"));
+                    "TXN ID", "DRUG CODE", "QTY", "TOTAL (GH₵)", "DATE"));
             System.out.println(ANSI_CYAN + "------------------------------------------------------------------------" + ANSI_RESET);
 
             // Print each transaction in a formatted row
             for (Transaction t : customerTransactions) {
                 // Assuming Transaction has getTxnID(), getDrugCode(), getQuantity(), getTotalPrice(), getDate()
-                System.out.println(String.format("%-12s | %-15s | %-10d | GHS %-8.2f | %s",
+                System.out.println(String.format("%-12s | %-15s | %-10d | GH₵ %-8.2f | %s",
                         t.getTxnID(),
                         t.getDrugCode(),
                         t.getQuantity(),

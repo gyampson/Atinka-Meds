@@ -89,7 +89,7 @@ public class Drug {
                 ANSI_GREEN + "  Name:          " + ANSI_BOLD + name + ANSI_RESET + "\n" +
                 ANSI_GREEN + "  Suppliers:     " + ANSI_BOLD + suppliersStr + ANSI_RESET + "\n" +
                 ANSI_GREEN + "  Expiry Date:   " + ANSI_BOLD + expiryDate + ANSI_RESET + "\n" +
-                ANSI_GREEN + String.format("  Price:         " + ANSI_BOLD + "GHS %.2f", price) + ANSI_RESET + "\n" +
+                ANSI_GREEN + String.format("  Price:         " + ANSI_BOLD + "GH₵ %.2f", price) + ANSI_RESET + "\n" +
                 ANSI_GREEN + "  Current Stock: " + ANSI_BOLD + stock + ANSI_RESET + "\n" +
                 ANSI_GREEN + "══════════════════════════════════════════════" + ANSI_RESET;
     }

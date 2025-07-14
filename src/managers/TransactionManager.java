@@ -37,7 +37,7 @@ public class TransactionManager {
         // You can add more details here for a richer confirmation, e.g.:
         // System.out.println(ANSI_GREEN + "    Customer: " + transaction.getCustomerID() + ANSI_RESET);
         // System.out.println(ANSI_GREEN + "    Drug: " + transaction.getDrugCode() + " (Qty: " + transaction.getQuantity() + ")" + ANSI_RESET);
-        // System.out.println(ANSI_GREEN + String.format("    Total Amount: GHS %.2f", transaction.getTotalPrice()) + ANSI_RESET);
+        // System.out.println(ANSI_GREEN + String.format("    Total Amount: GH₵ %.2f", transaction.getTotalPrice()) + ANSI_RESET);
         // System.out.println(ANSI_GREEN + "    Date: " + transaction.getDate() + ANSI_RESET);
     }
 

@@ -43,7 +43,7 @@ public class Transaction {
                 ANSI_GREEN + "  Customer ID    : " + ANSI_BOLD + customerID + ANSI_RESET + "\n" +
                 ANSI_GREEN + "  Drug Code      : " + ANSI_BOLD + drugCode + ANSI_RESET + "\n" +
                 ANSI_GREEN + "  Quantity       : " + ANSI_BOLD + quantity + ANSI_RESET + "\n" +
-                ANSI_GREEN + String.format("  Total Price    : " + ANSI_BOLD + "GHS %.2f", totalPrice) + ANSI_RESET + "\n" +
+                ANSI_GREEN + String.format("  Total Price    : " + ANSI_BOLD + "GH₵ %.2f", totalPrice) + ANSI_RESET + "\n" +
                 ANSI_GREEN + "  Date           : " + ANSI_BOLD + date + ANSI_RESET + "\n" +
                 ANSI_GREEN + "══════════════════════════════════════════════════════" + ANSI_RESET;
     }
