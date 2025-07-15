@@ -1,3 +1,2 @@
 customerID,name,phone,address
-092882,Edward,0993773,Nima
-773452,Deborah Jones,0241345722,Adenta
+CUS009,gya,055stt,lkakd

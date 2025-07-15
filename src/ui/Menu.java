@@ -9,6 +9,12 @@ import models.Supplier;
 import managers.CustomerManager;
 import models.Transaction;
 
+
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.regex.Pattern;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
@@ -77,7 +83,7 @@ public class Menu {
             System.out.println("18. Export Low Stock Report");
             System.out.println("19. View Top-Selling Drugs");
             System.out.println("20. View Customer Purchase History");
-            System.out.println("21. Save & Exit");
+            System.out.println("00. Save & Exit");
             System.out.print("Choose option: ");
 
             int choice = scanner.nextInt();
@@ -159,7 +165,7 @@ public class Menu {
                     viewCustomerPurchaseHistory();
                     break;
 
-                case 21:
+                case 00:
                     exit = true;
                     System.out.println("Saving and exiting ...  Done!"); // Indicate action
                     // Optional: Add a small delay for user experience (requires try-catch for InterruptedException)
@@ -182,162 +188,142 @@ public class Menu {
     }
 
     private void addDrug() {
-        System.out.println(ANSI_CYAN + ANSI_BOLD + "\n--- Add New Drug ---" + ANSI_RESET); // Section Header
+        System.out.println(ANSI_CYAN + ANSI_BOLD + "\n--- ➕ Add New Drug ---" + ANSI_RESET);
+        System.out.println(ANSI_YELLOW + "(Tip: You can type ':cancel' at any time to return to the main menu)" + ANSI_RESET);
 
-        System.out.print(ANSI_BLUE + "Enter Drug Code: " + ANSI_RESET);
-        String code = scanner.nextLine();
+        try {
+            String code = promptMatchingPatternOrCancel("🧾 Enter Drug Code (e.g., DR001): ", "^DR\\d+$", "DR001");
+            String name = promptLettersOnlyOrCancel("📛 Enter Drug Name: ");
+            String supplierIDs = promptMatchingPatternOrCancel("🏷️ Enter Supplier ID (e.g., SUP001): ", "^SUP\\d+$", "SUP001");
+            List<String> suppliers = List.of(supplierIDs.split("\\|"));
+            String expiry = promptDateOrCancel("⏳ Enter Expiry Date (YYYY-MM-DD): ");
+            double price = promptPositiveDoubleOrCancel("💰 Enter Price: ");
+            int stock = promptPositiveIntOrCancel("📦 Enter Stock Quantity: ");
 
-        System.out.print(ANSI_BLUE + "Enter Drug Name: " + ANSI_RESET);
-        String name = scanner.nextLine();
-
-        System.out.print(ANSI_BLUE + "Enter Supplier IDs (e.g., SUP001|SUP002): " + ANSI_RESET); // Example for clarity
-        String supplierIDs = scanner.nextLine();
-        List<String> suppliers = List.of(supplierIDs.split("\\|"));
-
-        System.out.print(ANSI_BLUE + "Enter Expiry Date (YYYY-MM-DD): " + ANSI_RESET);
-        String expiry = scanner.nextLine();
-
-        System.out.print(ANSI_BLUE + "Enter Price: " + ANSI_RESET);
-        double price = scanner.nextDouble();
-
-        System.out.print(ANSI_BLUE + "Enter Stock Quantity: " + ANSI_RESET); // More descriptive
-        int stock = scanner.nextInt();
-        scanner.nextLine();
+            Drug drug = new Drug(name, code, suppliers, expiry, price, stock);
+            drugInventory.addDrug(drug);
 
 
-        Drug drug = new Drug(name, code, suppliers, expiry, price, stock);
-        drugInventory.addDrug(drug);
+
+        } catch (CancelInputException e) {
+            System.out.println(ANSI_YELLOW + "↩️ Input cancelled. Returning to main menu..." + ANSI_RESET);
+        }
     }
+
+
 
     private void removeDrug() {
         System.out.print(ANSI_BLUE + "Enter Drug Code to Remove " + ANSI_RESET);
         String code = scanner.nextLine();
         drugInventory.removeDrug(code);
+        waitForEnter();
+
     }
 
     private void addSupplier() {
-        System.out.println(ANSI_CYAN + ANSI_BOLD + "\n--- Add New Supplier ---" + ANSI_RESET); // Section Header
+        System.out.println(ANSI_CYAN + ANSI_BOLD + "\n--- ➕ Add New Supplier ---" + ANSI_RESET);
+        System.out.println(ANSI_YELLOW + "(Tip: You can type ':cancel' at any time to return to the main menu)" + ANSI_RESET);
 
-        System.out.print(ANSI_BLUE + "Enter Supplier ID (e.g., SUP001): " + ANSI_RESET); // Example
-        String id = scanner.nextLine();
+        try {
+            String id = promptMatchingPatternOrCancel("🏷️ Enter Supplier ID (e.g., SUP001): ", "^SUP\\d+$", "SUP001");
 
-        System.out.print(ANSI_BLUE + "Enter Supplier Name: " + ANSI_RESET);
-        String name = scanner.nextLine();
 
-        System.out.print(ANSI_BLUE + "Enter Contact Person/Number: " + ANSI_RESET); // More descriptive
-        String contact = scanner.nextLine();
+            String name = promptLettersOnlyOrCancel("🏛️️ Enter Supplier Name: ");
+            String contact = promptNumbersOnlyOrCancel("📞 Enter Contact Number: ");
 
-        System.out.print(ANSI_BLUE + "Enter Location: " + ANSI_RESET);
-        String location = scanner.nextLine();
 
-        System.out.print(ANSI_BLUE + "Enter Estimated Delivery Turnaround Time (in days): " + ANSI_RESET); // More descriptive
-        double turnaround = scanner.nextDouble();
-        scanner.nextLine(); // Consume newline
+            String location = promptNonEmptyStringOrCancel("📍 Enter Location: ");
+            double turnaround = promptPositiveDoubleOrCancel("⏱️ Enter Delivery Turnaround Time (in days): ");
+            String drugCodes = promptMatchingPatternOrCancel("🧾 Enter Drug Code (e.g., DR001): ", "^DR\\d+$", "DR001");
+            List<String> drugsSupplied = List.of(drugCodes.split("\\|"));
 
-        System.out.print(ANSI_BLUE + "Enter Drug Codes Supplied (separate by | e.g., DRG001|DRG005): " + ANSI_RESET); // Example
-        String drugCodes = scanner.nextLine();
-        List<String> drugsSupplied = List.of(drugCodes.split("\\|"));
+            for (String code : drugsSupplied) {
+                if (!code.trim().matches("^DR\\d+$")) {
+                    System.out.println(ANSI_RED + "❌ Invalid Drug Code format: " + code + ". Expected format: DR001" + ANSI_RESET);
+                    return;
+                }
+            }
 
-        Supplier supplier = new Supplier(id, name, contact, location, turnaround, drugsSupplied);
-        supplierManager.addSupplier(supplier);
+            Supplier supplier = new Supplier(id, name, contact, location, turnaround, drugsSupplied);
+            supplierManager.addSupplier(supplier);
+
+
+        } catch (CancelInputException e) {
+            System.out.println(ANSI_YELLOW + "↩️ Input cancelled. Returning to main menu..." + ANSI_RESET);
+        }
     }
-
 
 
 
     private void addCustomer() {
-        System.out.println(ANSI_CYAN + ANSI_BOLD + "\n--- Add New Customer ---" + ANSI_RESET); // Section Header
+        System.out.println(ANSI_CYAN + ANSI_BOLD + "\n--- ➕ Add New Customer ---" + ANSI_RESET);
+        System.out.println(ANSI_YELLOW + "(Tip: You can type ':cancel' at any time to return to the main menu)" + ANSI_RESET);
 
-        System.out.print(ANSI_BLUE + "Enter Customer ID (e.g., CUST001): " + ANSI_RESET); // Example for clarity
-        String id = scanner.nextLine();
+        try {
+            // Enforce Customer ID format: CUS + numbers
+            String id = promptMatchingPatternOrCancel("🪪 Enter Customer ID (e.g., CUS001): ", "^CUS\\d+$", "CUS001");
 
-        System.out.print(ANSI_BLUE + "Enter Customer Name: " + ANSI_RESET);
-        String name = scanner.nextLine();
+            String name = promptLettersOnlyOrCancel("📛 Enter Customer Name: ");
+            String phone = promptNumbersOnlyOrCancel("📞 Enter Contact Number: ");
 
-        System.out.print(ANSI_BLUE + "Enter Contact Number: " + ANSI_RESET);
-        String phone = scanner.nextLine();
+            String address = promptNonEmptyStringOrCancel("📍 Enter Address: ");
 
-        System.out.print(ANSI_BLUE + "Enter Address: " + ANSI_RESET);
-        String address = scanner.nextLine();
+            customerManager.addCustomer(new Customer(id, name, phone, address));
 
-        customerManager.addCustomer(new Customer(id, name, phone, address));
+
+
+        } catch (CancelInputException e) {
+            System.out.println(ANSI_YELLOW + "↩️ Input cancelled. Returning to main menu..." + ANSI_RESET);
+        }
     }
-//    private void listCustomers(){}
+
+
+
+
 
 
     private void recordTransaction() {
-        System.out.println(ANSI_CYAN + ANSI_BOLD + "\n--- Record New Transaction ---" + ANSI_RESET); // Section Header
+        System.out.println(ANSI_CYAN + ANSI_BOLD + "\n--- 💰 Record New Transaction ---" + ANSI_RESET);
 
-        System.out.print(ANSI_BLUE + "Enter Transaction ID: " + ANSI_RESET);
-        String txnID = scanner.nextLine();
-
-        System.out.print(ANSI_BLUE + "Enter Customer ID: " + ANSI_RESET);
-        String customerID = scanner.nextLine();
-
-        // Validate customer exists
-        Customer customer = customerManager.findByID(customerID);
-        if (customer == null) {
-            System.out.println(ANSI_RED + ANSI_BOLD + "❌ Error: Customer ID '" + customerID + "' not found. Please add the customer first." + ANSI_RESET);
-            return;
-        }
-
-        System.out.print(ANSI_BLUE + "Enter Drug Code: " + ANSI_RESET);
-        String drugCode = scanner.nextLine();
-
-        // Validate drug exists
-        Drug drug = drugInventory.findByCode(drugCode);
-        if (drug == null) {
-            System.out.println(ANSI_RED + ANSI_BOLD + "❌ Error: Drug code '" + drugCode + "' not found. Please add the drug first." + ANSI_RESET);
-            return;
-        }
-
-        System.out.print(ANSI_BLUE + "Enter Quantity: " + ANSI_RESET);
-        int quantity;
         try {
-            quantity = Integer.parseInt(scanner.nextLine());
-            if (quantity <= 0) { // Added validation for positive quantity
-                System.out.println(ANSI_RED + ANSI_BOLD + "❌ Error: Quantity must be a positive number. Transaction cancelled." + ANSI_RESET);
-                return;
+            String txnID = promptMatchingPatternOrCancel("🧾 Enter Transaction ID (e.g., TRX001):", "^TRX\\d+$", "TRX001");
+
+            // Customer ID & validation
+            String customerID;
+            Customer customer;
+            while (true) {
+                customerID = promptMatchingPatternOrCancel("🪪 Enter Customer ID (e.g., CUS001):", "^CUS\\d+$", "CUS001");
+                customer = customerManager.findByID(customerID);
+                if (customer != null) break;
+                System.out.println(ANSI_RED + "❌ Not found. Add the customer or enter another ID." + ANSI_RESET);
             }
-        } catch (NumberFormatException e) {
-            System.out.println(ANSI_RED + ANSI_BOLD + "❌ Invalid quantity format. Please enter a whole number. Transaction cancelled." + ANSI_RESET);
-            return;
+
+            // Drug Code & validation
+            String drugCode;
+            Drug drug;
+            while (true) {
+                drugCode = promptMatchingPatternOrCancel("💊 Enter Drug Code (e.g., DR001):", "^DR\\d+$", "DR001");
+                drug = drugInventory.findByCode(drugCode);
+                if (drug != null) break;
+                System.out.println(ANSI_RED + "❌ Not found. Type ':cancel' to go add the drug." + ANSI_RESET);
+            }
+
+            int quantity = promptPositiveInt("🔢 Enter Quantity: ");
+            double totalPrice = quantity * drug.getPrice();
+            String date = promptDate("📅 Enter Date (YYYY-MM-DD): ");
+
+            // Reduce stock
+            drug.setStock(drug.getStock() - quantity);
+            Transaction transaction = new Transaction(txnID, customerID, drugCode, quantity, totalPrice, date);
+            transactionManager.addTransaction(transaction);
+
+
+        } catch (CancelInputException e) {
+            System.out.println(ANSI_YELLOW + "↩️ Input cancelled. Returning to main menu..." + ANSI_RESET);
         }
-
-        if (quantity > drug.getStock()) {
-            System.out.println(ANSI_RED + ANSI_BOLD + "❌ Not enough stock for '" + drug.getName() + "'. Available: " + drug.getStock() + ", Requested: " + quantity + ". Transaction cancelled." + ANSI_RESET);
-            return;
-        }
-
-        double totalPrice = quantity * drug.getPrice();
-
-        System.out.print(ANSI_BLUE + "Enter Date (YYYY-MM-DD): " + ANSI_RESET);
-        String date = scanner.nextLine();
-
-        // Optional: Validate Date Format (Good Practice)
-        try {
-            java.time.LocalDate.parse(date); // Just parse to check validity, no need to store LocalDate here if String is preferred
-        } catch (java.time.format.DateTimeParseException e) {
-            System.out.println(ANSI_YELLOW + ANSI_BOLD + "⚠️ Warning: Invalid date format. Please use YYYY-MM-DD. Continuing with provided date." + ANSI_RESET);
-            // You might choose to prompt again or use current date here if invalid input is critical.
-        }
-
-
-        // Reduce stock
-        drug.setStock(drug.getStock() - quantity);
-        System.out.println(ANSI_GREEN + "✅ Stock updated for '" + drug.getName() + "'. New stock: " + drug.getStock() + ANSI_RESET);
-
-        // Record transaction
-        // Assuming transactionManager.addTransaction handles unique ID check and prints its own success/error
-        // If not, you'd add a try-catch for addTransaction here similar to previous examples.
-        Transaction transaction = new Transaction(txnID, customerID, drugCode, quantity, totalPrice, date);
-        transactionManager.addTransaction(transaction); // This method should handle its own success/duplicate ID message
-
-        // This final message is good if addTransaction doesn't print its own success
-        // If addTransaction prints success, you might remove this or make it more general.
-        // Assuming transactionManager.addTransaction does not print success, we keep this.
-        System.out.println(ANSI_GREEN + ANSI_BOLD + "✅ Transaction '" + txnID + "' recorded successfully!" + ANSI_RESET);
     }
+
+
     private void showSalesReport() {
         // Assuming transactionManager.getTransactions() returns a List<Transaction>
         List<Transaction> transactions = transactionManager.getTransactions();
@@ -387,6 +373,8 @@ public class Menu {
         System.out.println(ANSI_CYAN + "═══════════════════════════════════════" + ANSI_RESET); // Bottom Separator
         System.out.println(ANSI_YELLOW + "Report generated at " + java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm")) + ANSI_RESET);
         System.out.println(ANSI_CYAN + "═══════════════════════════════════════" + ANSI_RESET); // Final Separator
+        waitForEnter();
+
     }
     private void searchDrugByCode() {
         System.out.println(ANSI_CYAN + ANSI_BOLD + "\n--- Search Drug by Code ---" + ANSI_RESET); // Section Header
@@ -410,6 +398,8 @@ public class Menu {
             System.out.println(ANSI_GREEN + "═════════════════════════════════════" + ANSI_RESET); // Bottom Separator
         } else {
             System.out.println(ANSI_RED + ANSI_BOLD + "❌ Drug with code '" + code + "' not found in inventory." + ANSI_RESET);
+            waitForEnter();
+
         }
     }
     private void searchCustomerByID() {
@@ -432,6 +422,8 @@ public class Menu {
         } else {
             System.out.println(ANSI_RED + ANSI_BOLD + "❌ Customer with ID '" + id + "' not found." + ANSI_RESET);
         }
+        waitForEnter();
+
     }
     private void deleteDrugByCode() {
         System.out.println(ANSI_CYAN + ANSI_BOLD + "\n--- Delete Drug by Code ---" + ANSI_RESET); // Section Header
@@ -462,6 +454,8 @@ public class Menu {
         if (wasDeleted) {
 
         }
+        waitForEnter();
+
     }
     private void deleteCustomerByID() {
         System.out.println(ANSI_CYAN + ANSI_BOLD + "\n--- Delete Customer by ID ---" + ANSI_RESET); // Section Header
@@ -487,6 +481,7 @@ public class Menu {
 
 
         boolean wasDeleted = customerManager.removeCustomer(id);
+        waitForEnter();
 
 
     }
@@ -526,6 +521,8 @@ public class Menu {
         }
 
         System.out.println(ANSI_CYAN + "════════════════════════════════════════════════════════════════════════" + ANSI_RESET);
+        waitForEnter();
+
     }
 
     private void showSupplierDrugReport() {
@@ -563,6 +560,10 @@ public class Menu {
 
         System.out.println(ANSI_GREEN + ANSI_BOLD + "\n✅ Report Complete: " + suppliers.size() + " suppliers listed." + ANSI_RESET);
         System.out.println(ANSI_CYAN + "═════════════════════════════════════════════════════" + ANSI_RESET);
+
+
+        waitForEnter();
+
     }
 
     private void exportTransactionsReport() {
@@ -613,6 +614,8 @@ public class Menu {
             // Error message
             System.out.println(ANSI_RED + ANSI_BOLD + "❌ Error writing transactions report to file: " + e.getMessage() + ANSI_RESET);
         }
+        waitForEnter();
+
     }
     private void exportLowStockReport() {
         // CLI Header
@@ -668,6 +671,8 @@ public class Menu {
             // Error: Export failed
             System.out.println(ANSI_RED + ANSI_BOLD + "❌ Error writing low stock report to file: " + e.getMessage() + ANSI_RESET);
         }
+        waitForEnter();
+
     }
     private void viewTopSellingDrugs() {
         System.out.println(ANSI_CYAN + ANSI_BOLD + "\n🏆 TOP-SELLING DRUGS REPORT 🏆" + ANSI_RESET);
@@ -725,6 +730,8 @@ public class Menu {
         System.out.println(ANSI_CYAN + "------------------------------------------------------------" + ANSI_RESET);
         System.out.println(ANSI_GREEN + ANSI_BOLD + "✅ Report complete. Displaying " + sortedSales.size() + " unique top-selling drugs." + ANSI_RESET);
         System.out.println(ANSI_CYAN + "══════════════════════════════════════════════════════════" + ANSI_RESET);
+        waitForEnter();
+
     }
     private void viewCustomerPurchaseHistory() {
         System.out.println(ANSI_CYAN + ANSI_BOLD + "\n--- View Customer Purchase History ---" + ANSI_RESET); // Section Header
@@ -776,7 +783,199 @@ public class Menu {
         System.out.println(ANSI_CYAN + "════════════════════════════════════════════════════════════════════════" + ANSI_RESET);
         System.out.println(ANSI_GREEN + ANSI_BOLD + "✅ Report complete. Displaying " + customerTransactions.size() + " transactions." + ANSI_RESET);
         System.out.println(ANSI_CYAN + "════════════════════════════════════════════════════════════════════════" + ANSI_RESET);
+        waitForEnter();
+
     }
+
+
+
+
+
+    private String promptNonEmptyString(String message) {
+        String input;
+        do {
+            System.out.print(ANSI_BLUE + message + ANSI_RESET);
+            input = scanner.nextLine().trim();
+            if (input.isEmpty()) {
+                System.out.println(ANSI_RED + "❌ Input cannot be empty. Please try again." + ANSI_RESET);
+            }
+        } while (input.isEmpty());
+        return input;
+    }
+
+    private double promptPositiveDouble(String message) {
+        double value = -1;
+        while (value <= 0) {
+            System.out.print(ANSI_BLUE + message + ANSI_RESET);
+            if (scanner.hasNextDouble()) {
+                value = scanner.nextDouble();
+                if (value <= 0) {
+                    System.out.println(ANSI_RED + "❌ Must be greater than 0." + ANSI_RESET);
+                }
+            } else {
+                System.out.println(ANSI_RED + "❌ Invalid number. Please try again." + ANSI_RESET);
+                scanner.next(); // discard invalid input
+            }
+        }
+        scanner.nextLine(); // clear newline
+        return value;
+    }
+
+    private int promptPositiveInt(String message) {
+        int value = -1;
+        while (value <= 0) {
+            System.out.print(ANSI_BLUE + message + ANSI_RESET);
+            if (scanner.hasNextInt()) {
+                value = scanner.nextInt();
+                if (value <= 0) {
+                    System.out.println(ANSI_RED + "❌ Must be a positive number." + ANSI_RESET);
+                }
+            } else {
+                System.out.println(ANSI_RED + "❌ Invalid input. Enter a number." + ANSI_RESET);
+                scanner.next();
+            }
+        }
+        scanner.nextLine(); // clear newline
+        return value;
+    }
+
+    private String promptDate(String message) {
+        String input;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        while (true) {
+            System.out.print(ANSI_BLUE + message + ANSI_RESET);
+            input = scanner.nextLine().trim();
+            try {
+                LocalDate.parse(input, formatter);
+                break;
+            } catch (DateTimeParseException e) {
+                System.out.println(ANSI_RED + "❌ Invalid format. Use YYYY-MM-DD." + ANSI_RESET);
+            }
+        }
+        return input;
+    }
+    private String promptMatchingPattern(String message, String pattern, String example) {
+        Pattern compiledPattern = Pattern.compile(pattern);
+        String input;
+        while (true) {
+            System.out.print(ANSI_BLUE + message + ANSI_RESET);
+            input = scanner.nextLine().trim();
+            if (compiledPattern.matcher(input).matches()) {
+                break;
+            } else {
+                System.out.println(ANSI_RED + "❌ Invalid format. Example: " + example + ANSI_RESET);
+            }
+        }
+        return input;
+    }
+    private String promptWithCancel(String message) {
+        System.out.print(ANSI_BLUE + message + ANSI_RESET);
+        String input = scanner.nextLine().trim();
+        if (input.equalsIgnoreCase(":cancel") || input.equalsIgnoreCase(":exit")) {
+            throw new CancelInputException();
+        }
+        return input;
+    }
+
+    private String promptMatchingPatternOrCancel(String message, String pattern, String example) {
+        Pattern compiledPattern = Pattern.compile(pattern);
+        while (true) {
+            String input = promptWithCancel(message);
+            if (compiledPattern.matcher(input).matches()) {
+                return input;
+            } else {
+                System.out.println(ANSI_RED + "❌ Invalid format. Example: " + example + ANSI_RESET);
+            }
+        }
+    }
+
+    private String promptNonEmptyStringOrCancel(String message) {
+        String input;
+        while (true) {
+            input = promptWithCancel(message);
+            if (input.isBlank()) {
+                System.out.println(ANSI_RED + "❌ Input cannot be empty. Please try again." + ANSI_RESET);
+            } else {
+                return input;
+            }
+        }
+    }
+
+    private int promptPositiveIntOrCancel(String message) {
+        while (true) {
+            String input = promptWithCancel(message);
+            try {
+                int value = Integer.parseInt(input);
+                if (value > 0) {
+                    return value;
+                } else {
+                    System.out.println(ANSI_RED + "❌ Must be a positive number." + ANSI_RESET);
+                }
+            } catch (NumberFormatException e) {
+                System.out.println(ANSI_RED + "❌ Invalid number. Please enter a whole number." + ANSI_RESET);
+            }
+        }
+    }
+
+    private double promptPositiveDoubleOrCancel(String message) {
+        while (true) {
+            String input = promptWithCancel(message);
+            try {
+                double value = Double.parseDouble(input);
+                if (value > 0) {
+                    return value;
+                } else {
+                    System.out.println(ANSI_RED + "❌ Must be greater than 0." + ANSI_RESET);
+                }
+            } catch (NumberFormatException e) {
+                System.out.println(ANSI_RED + "❌ Invalid number. Please enter a valid price." + ANSI_RESET);
+            }
+        }
+    }
+    private String promptDateOrCancel(String message) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        while (true) {
+            String input = promptWithCancel(message);
+            try {
+                LocalDate.parse(input, formatter);
+                return input;
+            } catch (DateTimeParseException e) {
+                System.out.println(ANSI_RED + "❌ Invalid date format. Please use YYYY-MM-DD." + ANSI_RESET);
+            }
+        }
+    }
+
+    private String promptLettersOnlyOrCancel(String message) {
+        while (true) {
+            String input = promptWithCancel(message);
+            if (input.matches("^[A-Za-z ]+$")) {
+                return input;
+            } else {
+                System.out.println(ANSI_RED + "❌ Invalid input. Only letters and spaces are allowed." + ANSI_RESET);
+            }
+        }
+    }
+
+    private String promptNumbersOnlyOrCancel(String message) {
+        while (true) {
+            String input = promptWithCancel(message);
+            if (input.matches("^\\d+$")) {
+                return input;
+            } else {
+                System.out.println(ANSI_RED + "❌ Invalid input. Only numbers are allowed." + ANSI_RESET);
+            }
+        }
+    }
+
+
+    private void waitForEnter() {
+        System.out.println();
+        System.out.println(ANSI_BLUE + "(Press Enter to continue...)" + ANSI_RESET);
+        scanner.nextLine();
+    }
+
+
+
 
 
 }

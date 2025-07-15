@@ -1,3 +1,2 @@
 supplierID,name,contact,location,turnaround,drugs
-11257581,gyampson,0551957522,Legon,129.0,3039
-113211,Steven Peters,0208272744,Chicago,19.0,20971
+SUP009,Edward,09012387,Legon,9.0,DR001
