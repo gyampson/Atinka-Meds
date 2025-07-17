@@ -17,6 +17,7 @@ public class Drug {
     private String name;
     private String code;
     private List<String> suppliers;
+
     private String expiryDate;
     private double price;
     private int stock;
@@ -31,6 +32,7 @@ public class Drug {
     }
 
     // Getters
+
     public String getName() {
         return name;
     }

@@ -37,7 +37,7 @@ public class CustomerManager {
             }
         }
         customers.add(customer);
-        printSuccess("Customer '" + customer.getName() + "' (ID: " + customer.getCustomerID() + ") added.");
+        printSuccess("Customer '" + customer.getName() + "' (CUS ID: " + customer.getCustomerID() + ") added.");
     }
 
     // ✅ Remove Customer with feedback

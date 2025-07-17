@@ -77,7 +77,6 @@ public class SupplierManager {
 
     // ✅ Filter by Location
     public void filterByLocation(String location) {
-        System.out.println(ANSI_BLUE + ANSI_BOLD + "\n=== 📍 Suppliers in '" + location + "' ===" + ANSI_RESET);
         boolean found = false;
         for (Supplier s : suppliers) {
             if (s.getLocation().equalsIgnoreCase(location)) {
@@ -86,24 +85,28 @@ public class SupplierManager {
             }
         }
         if (!found) {
-            System.out.println(ANSI_YELLOW + "⚠️ No suppliers found in '" + location + "'." + ANSI_RESET);
+            System.out.println(ANSI_YELLOW + ANSI_BOLD + "⚠️ No suppliers found in that location." + ANSI_RESET);
         }
     }
 
-    // ✅ Filter by Turnaround Time
-    public void filterByTurnaround(double maxDays) {
-        System.out.println(ANSI_BLUE + ANSI_BOLD + "\n=== ⏱️ Suppliers with ≤ " + maxDays + " days delivery ===" + ANSI_RESET);
-        boolean found = false;
+    public List<Supplier> getSuppliersByTurnaround(double maxDays) {
+        List<Supplier> results = new ArrayList<>();
         for (Supplier s : suppliers) {
             if (s.getDeliveryTurnaroundTime() <= maxDays) {
-                System.out.println(s);
-                found = true;
+                results.add(s);
             }
         }
-        if (!found) {
-            System.out.println(ANSI_YELLOW + "⚠️ No suppliers found with turnaround ≤ " + maxDays + " days." + ANSI_RESET);
-        }
+        return results;
+    }
 
+
+    public Supplier findByID(String id) {
+        for (Supplier s : suppliers) {
+            if (s.getSupplierID().equalsIgnoreCase(id)) {
+                return s;
+            }
+        }
+        return null;
     }
 
     // ✅ Optional Update
@@ -111,7 +114,7 @@ public class SupplierManager {
         for (int i = 0; i < suppliers.size(); i++) {
             if (suppliers.get(i).getSupplierID().equalsIgnoreCase(updatedSupplier.getSupplierID())) {
                 suppliers.set(i, updatedSupplier);
-                printSuccess("Supplier '" + updatedSupplier.getName() + "' (ID: " + updatedSupplier.getSupplierID() + ") updated.");
+                printSuccess("Supplier '" + updatedSupplier.getName() + "' (SUP ID: " + updatedSupplier.getSupplierID() + ") updated.");
                 return;
             }
         }

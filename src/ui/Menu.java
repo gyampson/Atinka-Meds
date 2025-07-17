@@ -23,8 +23,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Scanner;
 
 public class Menu {
@@ -68,21 +69,25 @@ public class Menu {
             System.out.println("3.  List Drugs");
             System.out.println("4.  Add Supplier");
             System.out.println("5.  List Suppliers");
-            System.out.println("6.  Add Customer");
-            System.out.println("7.  List Customers");
-            System.out.println("8.  Record Transactions");
-            System.out.println("9.  List Transactions");
-            System.out.println("10. View Low Stock Report");
-            System.out.println("11. View Sales Report");
-            System.out.println("12. Search Drug by Code");
-            System.out.println("13. Search Customer by ID");
-            System.out.println("14. Delete Drug by Code");
-            System.out.println("15. Delete Customer by ID");
-            System.out.println("16. View Supplier Drug Report");
-            System.out.println("17. Export Transactions Report");
-            System.out.println("18. Export Low Stock Report");
-            System.out.println("19. View Top-Selling Drugs");
-            System.out.println("20. View Customer Purchase History");
+            System.out.println("6.  Filter Suppliers by Time");
+            System.out.println("7.  Filter Suppliers by Location");
+            System.out.println("8.  View Suppliers for Drug");
+            System.out.println("9.  Link Supplier To Drug");
+            System.out.println("10. Add Customer");
+            System.out.println("11. List Customers");
+            System.out.println("12. Record Transactions");
+            System.out.println("13. List Transactions");
+            System.out.println("14. View Low Stock Report");
+            System.out.println("15. View Sales Report");
+            System.out.println("16. Search Drug by Code");
+            System.out.println("17. Search Customer by ID");
+            System.out.println("18. Delete Drug by Code");
+            System.out.println("19. Delete Customer by ID");
+            System.out.println("20. View Supplier Drug Report");
+            System.out.println("21. Export Transactions Report");
+            System.out.println("22. Export Low Stock Report");
+            System.out.println("23. View Top-Selling Drugs");
+            System.out.println("24. View Customer Purchase History");
             System.out.println("00. Save & Exit");
             System.out.print("Choose option: ");
 
@@ -120,61 +125,76 @@ public class Menu {
                     supplierManager.listSuppliers();
                     break;
                 case 6:
-                    addCustomer();
+                    filterSuppliersByTime();
                     break;
                 case 7:
-                    customerManager.listCustomers();
+                    filterSuppliersByLocation();
                     break;
                 case 8:
-                    recordTransaction();
+                    viewSuppliersForDrug();
                     break;
                 case 9:
-                    transactionManager.listTransactions();
+                    linkSupplierToDrug();
                     break;
+
+
                 case 10:
-                    showLowStockReport();
+                    addCustomer();
                     break;
                 case 11:
-                    showSalesReport();
+                    customerManager.listCustomers();
                     break;
                 case 12:
-                    searchDrugByCode();
+                    recordTransaction();
                     break;
                 case 13:
-                    searchCustomerByID();
+                    transactionManager.listTransactions();
                     break;
                 case 14:
-                    deleteDrugByCode();
+                    showLowStockReport();
                     break;
                 case 15:
-                    deleteCustomerByID();
+                    showSalesReport();
                     break;
                 case 16:
-                    showSupplierDrugReport();
+                    searchDrugByCode();
                     break;
                 case 17:
-                    exportTransactionsReport();
+                    searchCustomerByID();
                     break;
                 case 18:
-                    exportLowStockReport();
+                    deleteDrugByCode();
                     break;
                 case 19:
-                    viewTopSellingDrugs();
+                    deleteCustomerByID();
                     break;
                 case 20:
+                    showSupplierDrugReport();
+                    break;
+                case 21:
+                    exportTransactionsReport();
+                    break;
+                case 22:
+                    exportLowStockReport();
+                    break;
+                case 23:
+                    viewTopSellingDrugs();
+                    break;
+                case 24:
                     viewCustomerPurchaseHistory();
                     break;
 
                 case 00:
                     exit = true;
-                    System.out.println("Saving and exiting ...  Done!"); // Indicate action
-                    // Optional: Add a small delay for user experience (requires try-catch for InterruptedException)
+                    System.out.println(ANSI_GREEN + "Exiting... Have a great day!" + ANSI_RESET);
+                    System.out.println(ANSI_CYAN + "====================================================================" + ANSI_RESET);
+
                     try {
                         Thread.sleep(500); // Wait for 0.5 seconds
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt(); // Restore the interrupted status
                     }
-                    System.out.println("Thank you for using Atinka Meds. Goodbye!"); // Final confirmation
+                    System.out.println(ANSI_CYAN + ANSI_BOLD + "\nThank you for using ATINKA MEDS Pharmacy System!" + ANSI_RESET);
                     break;
 
 
@@ -213,7 +233,9 @@ public class Menu {
 
 
     private void removeDrug() {
-        System.out.print(ANSI_BLUE + "Enter Drug Code to Remove " + ANSI_RESET);
+        System.out.println(ANSI_CYAN + ANSI_BOLD + "\n--- Remove Drug ---" + ANSI_RESET);
+        System.out.println(ANSI_YELLOW + "(Tip: You can type ':cancel' at any time to return to the main menu)" + ANSI_RESET);
+        System.out.print(ANSI_BLUE + "Enter Drug Code to Remove : " + ANSI_RESET);
         String code = scanner.nextLine();
         drugInventory.removeDrug(code);
         waitForEnter();
@@ -234,8 +256,10 @@ public class Menu {
 
             String location = promptNonEmptyStringOrCancel("📍 Enter Location: ");
             double turnaround = promptPositiveDoubleOrCancel("⏱️ Enter Delivery Turnaround Time (in days): ");
-            String drugCodes = promptMatchingPatternOrCancel("🧾 Enter Drug Code (e.g., DR001): ", "^DR\\d+$", "DR001");
-            List<String> drugsSupplied = List.of(drugCodes.split("\\|"));
+            System.out.print(ANSI_BLUE + "Enter Drug Codes Supplied (separate by |): " + ANSI_RESET);
+            String drugCodes = scanner.nextLine();
+            List<String> drugsSupplied = new ArrayList<>(Arrays.asList(drugCodes.split("\\|")));
+
 
             for (String code : drugsSupplied) {
                 if (!code.trim().matches("^DR\\d+$")) {
@@ -322,6 +346,137 @@ public class Menu {
             System.out.println(ANSI_YELLOW + "↩️ Input cancelled. Returning to main menu..." + ANSI_RESET);
         }
     }
+    private void filterSuppliersByTime() {
+        System.out.println(ANSI_CYAN + ANSI_BOLD + "\n--- ⏱️ Filter Suppliers by Delivery Time ---" + ANSI_RESET);
+        System.out.println(ANSI_YELLOW + "(Tip: Type ':cancel' anytime to return)" + ANSI_RESET);
+
+        try {
+            double maxDays = promptPositiveDoubleOrCancel("⏳ Enter maximum delivery time in days: ");
+
+            System.out.println(ANSI_BLUE + "\n🔎 Searching for suppliers with delivery turnaround ≤ " + maxDays + " days..." + ANSI_RESET);
+
+            List<Supplier> matches = supplierManager.getSuppliersByTurnaround(maxDays);
+
+            if (matches.isEmpty()) {
+                System.out.println(ANSI_YELLOW + ANSI_BOLD + "\n⚠️ No suppliers found with turnaround time ≤ " + maxDays + " days." + ANSI_RESET);
+                System.out.println(ANSI_YELLOW + "💡 Tip: Try increasing the number of days or check your supplier data." + ANSI_RESET);
+            } else {
+                System.out.println(ANSI_GREEN + ANSI_BOLD + "\n✅ Found " + matches.size() + " supplier(s):" + ANSI_RESET);
+                for (Supplier s : matches) {
+                    System.out.println(ANSI_GREEN + "✔️ " + s + ANSI_RESET);
+                }
+            }
+
+        } catch (CancelInputException e) {
+            System.out.println(ANSI_YELLOW + "↩️ Input cancelled. Returning to main menu..." + ANSI_RESET);
+        }
+
+        waitForEnter();
+    }
+
+
+
+    private void linkSupplierToDrug() {
+        System.out.println(ANSI_CYAN + ANSI_BOLD + "\n--- 🔗 Link Supplier to Drug ---" + ANSI_RESET);
+        System.out.println(ANSI_YELLOW + "(Tip: Type ':cancel' anytime to return to the main menu)" + ANSI_RESET);
+
+        try {
+            // 1️⃣ Prompt for Supplier ID
+            String supplierID = promptMatchingPatternOrCancel("🏢 Enter Supplier ID (e.g., SUP001): ", "^SUP\\d+$", "SUP001");
+
+            Supplier supplier = supplierManager.findByID(supplierID);
+            if (supplier == null) {
+                System.out.println(ANSI_RED + ANSI_BOLD + "❌ Error: Supplier ID '" + supplierID + "' not found. Please add the supplier first." + ANSI_RESET);
+                waitForEnter();
+                return;
+            }
+
+            // 2️⃣ Prompt for Drug Code
+            String drugCode = promptMatchingPatternOrCancel("💊 Enter Drug Code to Link (e.g., DR001): ", "^DR\\d+$", "DR001");
+
+            Drug drug = drugInventory.findByCode(drugCode);
+            if (drug == null) {
+                System.out.println(ANSI_RED + ANSI_BOLD + "❌ Error: Drug code '" + drugCode + "' not found. Please add the drug first." + ANSI_RESET);
+                waitForEnter();
+                return;
+            }
+
+            // 3️⃣ Ensure Supplier's drugsSupplied list is mutable
+            List<String> drugsSupplied = supplier.getDrugsSupplied();
+            if (drugsSupplied == null) {
+                // Defensive programming: ensure list exists
+                drugsSupplied = new ArrayList<>();
+                supplier.setDrugsSupplied(drugsSupplied);
+            } else if (!(drugsSupplied instanceof ArrayList)) {
+                // Convert immutable list to mutable
+                drugsSupplied = new ArrayList<>(drugsSupplied);
+                supplier.setDrugsSupplied(drugsSupplied);
+            }
+
+            // 4️⃣ Check if already linked
+            if (drugsSupplied.contains(drugCode)) {
+                System.out.println(ANSI_YELLOW + ANSI_BOLD + "⚠️ Warning: Drug '" + drugCode + "' is already linked to Supplier '" + supplierID + "'." + ANSI_RESET);
+            } else {
+                // Add link
+                drugsSupplied.add(drugCode);
+                System.out.println(ANSI_GREEN + ANSI_BOLD + "✅ Successfully linked Drug '" + drugCode + "' to Supplier '" + supplierID + "'." + ANSI_RESET);
+            }
+
+        } catch (CancelInputException e) {
+            System.out.println(ANSI_YELLOW + "↩️ Input cancelled. Returning to main menu..." + ANSI_RESET);
+        }
+
+        waitForEnter();
+    }
+
+
+    private void filterSuppliersByLocation() {
+        System.out.println(ANSI_CYAN + ANSI_BOLD + "\n--- 📌 Filter Suppliers by Location ---" + ANSI_RESET);
+        System.out.println(ANSI_YELLOW + "(Tip: Type ':cancel' anytime to return)" + ANSI_RESET);
+
+        try {
+            String location = promptNonEmptyStringOrCancel("📍 Enter Location to Filter: ");
+
+            System.out.println(ANSI_BLUE + "\n📜 Suppliers in Location: " + location + ANSI_RESET);
+            supplierManager.filterByLocation(location);
+
+        } catch (CancelInputException e) {
+            System.out.println(ANSI_YELLOW + "↩️ Input cancelled. Returning to main menu..." + ANSI_RESET);
+        }
+        waitForEnter();
+    }
+    private void viewSuppliersForDrug() {
+        System.out.println(ANSI_CYAN + ANSI_BOLD + "\n--- 🔗 View Suppliers for Drug ---" + ANSI_RESET);
+        System.out.println(ANSI_YELLOW + "(Tip: Type ':cancel' anytime to return)" + ANSI_RESET);
+
+        try {
+            String drugCode = promptMatchingPatternOrCancel("💊 Enter Drug Code (e.g., DR001): ", "^DR\\d+$", "DR001");
+
+            System.out.println(ANSI_BLUE + "\n🔍 Suppliers for Drug Code: " + drugCode + ANSI_RESET);
+            boolean found = false;
+
+            for (Supplier s : supplierManager.getSuppliers()) {
+                if (s.getDrugsSupplied().contains(drugCode)) {
+                    System.out.println(s);
+                    found = true;
+                }
+            }
+
+            if (!found) {
+                System.out.println(ANSI_YELLOW + "⚠️ No suppliers found for this drug." + ANSI_RESET);
+            }
+
+        } catch (CancelInputException e) {
+            System.out.println(ANSI_YELLOW + "↩️ Input cancelled. Returning to main menu..." + ANSI_RESET);
+        }
+        waitForEnter();
+    }
+
+
+
+
+
+
 
 
     private void showSalesReport() {

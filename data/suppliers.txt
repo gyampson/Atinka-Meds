@@ -1,2 +1,3 @@
 supplierID,name,contact,location,turnaround,drugs
-SUP009,Edward,09012387,Legon,9.0,DR001
+SUP009,Edward,09012387,Legon,9.0,DR001|DR006
+SUP090,peter,055098754,Kumasi,9.0,DR003

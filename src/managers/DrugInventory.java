@@ -37,7 +37,7 @@ public class DrugInventory {
             }
         }
         drugs.add(drug);
-        printSuccess("Drug '" + drug.getName() + "' (Code: " + drug.getCode() + ") added.");
+        printSuccess("Drug '" + drug.getName() + "' (Drug Code: " + drug.getCode() + ") added.");
     }
 
     // ✅ Remove Drug with feedback

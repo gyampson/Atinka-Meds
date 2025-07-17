@@ -1,2 +1,3 @@
 transactionID,customerID,drugCode,quantity,totalPrice,date
 TRX002,CUS009,DR006,56,1736.0,2026-12-12
+TRX021,CUS009,DR003,23,1196.0,2025-07-15
